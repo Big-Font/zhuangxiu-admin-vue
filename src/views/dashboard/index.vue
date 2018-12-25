@@ -46,7 +46,8 @@ export default {
       changeOptions: {
         title: '',
         author: '',
-        content: ''
+        content: '',
+        img: 'http://127.0.0.1:5000/images/ueditor/timg.jpeg'
       },
       html: '',
       fileList: [],

@@ -33,54 +33,68 @@ export const constantRouterMap = [
     hidden: true,
     children: [{
       path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '管理面板', icon: 'example' },
     }]
   },
-
+  // 用户管理
   {
-    path: '/example',
+    path: '/user',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    redirect: '/user/api',
+    name: 'user',
+    meta: { title: '用户管理', icon: 'example' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        path: 'api',
+        name: 'apiUser',
+        component: () => import('@/views/fontUser/index'),
+        meta: { title: 'm站', icon: 'table' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: 'admin',
+        name: 'adminUser',
+        component: () => import('@/views/adminUser/index'),
+        meta: { title: '后台管理', icon: 'tree' }
       }
     ]
   },
-
+  // banner管理模块
   {
-    path: '/form',
+    path: '/banner',
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: '大萨达', icon: 'form' }
+        path: 'list',
+        name: 'list',
+        component: () => import('@/views/banner'),
+        meta: { title: 'banner管理', icon: 'table' }
       }
     ]
   },
-
+  // 资讯管理模块
   {
-    path: '/aaa',
+    path: '/article',
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/aa'),
-        meta: { title: 'aaa', icon: 'form' }
+        path: 'list',
+        name: 'articleList',
+        component: () => import('@/views/article'),
+        meta: { title: '资讯管理', icon: 'form' }
+      }
+    ]
+  },
+  // 秒杀活动管理
+  {
+    path: '/spike',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: 'spikeList',
+        component: () => import('@/views/spike'),
+        meta: { title: '资讯管理', icon: 'form' }
       }
     ]
   },

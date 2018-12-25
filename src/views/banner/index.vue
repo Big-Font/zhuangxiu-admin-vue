@@ -1,7 +1,7 @@
 <template>
- <div>
-   adfasdasdf
- </div>
+<div>
+  banner管理
+</div>
 </template>
 
 <script>
