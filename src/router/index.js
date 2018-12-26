@@ -43,19 +43,19 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/user/api',
     name: 'user',
-    meta: { title: '用户管理', icon: 'example' },
+    meta: { title: '用户管理', icon: 'peoples' },
     children: [
       {
         path: 'api',
         name: 'apiUser',
         component: () => import('@/views/fontUser/index'),
-        meta: { title: 'm站', icon: 'table' }
+        meta: { title: 'm站', icon: 'people' }
       },
       {
         path: 'admin',
         name: 'adminUser',
         component: () => import('@/views/adminUser/index'),
-        meta: { title: '后台管理', icon: 'tree' }
+        meta: { title: '后台管理', icon: 'user' }
       }
     ]
   },
@@ -68,7 +68,7 @@ export const constantRouterMap = [
         path: 'list',
         name: 'list',
         component: () => import('@/views/banner'),
-        meta: { title: 'banner管理', icon: 'table' }
+        meta: { title: 'banner管理', icon: 'drag' }
       }
     ]
   },
@@ -81,7 +81,8 @@ export const constantRouterMap = [
         path: 'list',
         name: 'articleList',
         component: () => import('@/views/article'),
-        meta: { title: '资讯管理', icon: 'form' }
+        meta: { title: '资讯管理', icon: 'international' }
+        // <svg-icon icon-class="international" />
       }
     ]
   },
@@ -94,7 +95,7 @@ export const constantRouterMap = [
         path: 'list',
         name: 'spikeList',
         component: () => import('@/views/spike'),
-        meta: { title: '资讯管理', icon: 'form' }
+        meta: { title: '秒杀活动', icon: 'form' }
       }
     ]
   },

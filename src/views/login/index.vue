@@ -14,7 +14,7 @@
           <el-input style="width:100%" name="smscode" type="text" v-model="loginForm.capkey" autoComplete="on" placeholder="请输入验证码" />
         </el-form-item>
         <div class="fr" @click="getSmsCode">
-          <img :src="baseUrl+'/admin/captcha'" alt="">
+          <img :src="baseUrl+'/captcha'" alt="">
         </div>
       </el-row>
 
@@ -31,10 +31,6 @@
           点击登录
         </el-button>
       </el-form-item>
-      <!-- <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: admin</span>
-      </div> -->
     </el-form>
   </div>
 </template>

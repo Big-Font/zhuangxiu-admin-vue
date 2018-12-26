@@ -1,3 +1,4 @@
+import { Message } from 'element-ui'
 import axios from 'axios'
 import store from '../store'
 import { baseUrl } from '../config'
@@ -6,7 +7,7 @@ import { baseUrl } from '../config'
 const baseConfig = {
   baseURL: baseUrl, // api的base_url
   withCredentials: true,
-  timeout: 5000 // 请求超时时间
+  timeout: 5000, // 请求超时时间
 }
 
 const service = axios.create(baseConfig)
@@ -26,6 +27,11 @@ service.interceptors.request.use(config => {
 
 // respone interceptor
 service.interceptors.response.use(response => {
+  console.log(response)
+  if(response.data.code != 0) {
+    console.log('进入相应拦截器错误处理了')
+    Message.error(response.data.msg);
+  }
   return response
 }, error => {
   console.log('err' + error) // for debug
