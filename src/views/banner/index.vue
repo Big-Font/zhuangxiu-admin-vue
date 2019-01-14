@@ -24,9 +24,9 @@
       <el-table-column
         label="图片地址"
         align="center"
-        width="180">
+        width="300">
         <template slot-scope="scope">
-          <div>{{scope.row.banner_url}}</div>
+          <img style="width:260px;height:180px;" :src="scope.row.banner_url" alt="">
         </template>
       </el-table-column>
       <el-table-column
@@ -49,6 +49,7 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
+            type="danger"
             @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <!-- <el-button
             size="mini"

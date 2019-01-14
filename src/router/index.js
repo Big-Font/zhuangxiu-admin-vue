@@ -72,6 +72,19 @@ export const constantRouterMap = [
       }
     ]
   },
+  // 装修案例管理
+  {
+    path: '/caseList',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: 'caseListList',
+        component: () => import('@/views/caseList'),
+        meta: { title: '装修案例', icon: 'form' }
+      }
+    ]
+  },
   // 资讯管理模块
   {
     path: '/article',
@@ -82,7 +95,6 @@ export const constantRouterMap = [
         name: 'articleList',
         component: () => import('@/views/article'),
         meta: { title: '资讯管理', icon: 'international' }
-        // <svg-icon icon-class="international" />
       }
     ]
   },
