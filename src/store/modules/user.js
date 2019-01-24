@@ -31,11 +31,15 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password, userInfo.capkey).then(response => {
-          const data = response.data
-          // console.log(data.token)
-          // setToken(data.token)
-          commit('SET_TOKEN', data.token)
-          resolve()
+          if(response.data.code === 0) {
+            const data = response.data
+            // console.log(data.token)
+            // setToken(data.token)
+            commit('SET_TOKEN', data.token)
+            resolve()
+          }else {
+            reject();
+          }
         }).catch(error => {
           reject(error)
         })

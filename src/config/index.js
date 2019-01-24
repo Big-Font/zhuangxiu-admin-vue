@@ -8,6 +8,7 @@
  */
 // const baseUrl = 'https://qingruiserver.wangshen.top'
 const baseUrl = 'http://127.0.0.1:5000/admin'
+const fontBaseUrl = 'http://127.0.0.1:5000/api'
 const routerMode = ''
 const baseImgPath = ''
 
@@ -21,6 +22,7 @@ const baseImgPath = ''
 
 export {
   baseUrl,
+  fontBaseUrl,
   routerMode,
   baseImgPath
 }

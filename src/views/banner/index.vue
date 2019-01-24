@@ -76,6 +76,7 @@
             :headers="authHeader"
             :multiple="false"
             :limit="1"
+            :on-success="fileUpload"
             list-type="picture">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -106,7 +107,8 @@ import { getBannerList, bannerModify } from '@/api/banner';
        fileList: [],
        dialogFormVisible: false,
        formLabelWidth: '160px',
-       actionBaseUrl: ''
+       actionBaseUrl: '',
+       uploadImgUrl: ''
      }
    },
    computed: {
@@ -143,9 +145,14 @@ import { getBannerList, bannerModify } from '@/api/banner';
         this.fileList = [];
       },
       async bannerModify() {
-        if(this.fileList.length) this.form.banner_url = this.fileList[0];
+        // if(!this.uploadImgUrl) this.$message.error();;
         try{
-          let res = await bannerModify(this.form);
+          let res = await bannerModify({
+            banner_id: this.form.banner_id,
+            banner_url: this.uploadImgUrl,
+            banner_path: this.form.banner_path,
+            banner_name: this.form.banner_name
+          });
           this.$message({
             message: res.data.msg,
             type: 'success',
@@ -155,6 +162,13 @@ import { getBannerList, bannerModify } from '@/api/banner';
           this.dialogFormVisible = false;
         }catch(err) {
           this.$message.error(err);
+        }
+      },
+      fileUpload(response, file, fileList) {
+        if(response.code === 0) {
+          this.uploadImgUrl = response.fileList[0];
+        }else {
+          this.$message.error('图片上传失败');
         }
       },
       handleDelete(index, row) {

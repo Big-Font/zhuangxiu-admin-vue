@@ -1,0 +1,24 @@
+.header-option{
+  width: 90%;
+  // padding: 10px 30px;
+  margin: 10px auto;
+  >div{
+    display: flex;
+    align-items: center;
+    >h4{
+      margin-right: 20px;
+    }
+    .item{
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+      >h4{
+        margin-right: 20px;
+      }
+    }
+    .btn{
+      margin-right: 50px;
+    }
+  }
+
+}

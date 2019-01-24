@@ -111,6 +111,19 @@ export const constantRouterMap = [
       }
     ]
   },
+  // 找师傅模块
+  {
+    path: '/worker',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: 'workerList',
+        component: () => import('@/views/worker'),
+        meta: { title: '找师傅', icon: 'nested' }
+      }
+    ]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
 ]
