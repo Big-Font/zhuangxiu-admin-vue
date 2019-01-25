@@ -33,8 +33,6 @@ const user = {
         login(username, userInfo.password, userInfo.capkey).then(response => {
           if(response.data.code === 0) {
             const data = response.data
-            // console.log(data.token)
-            // setToken(data.token)
             commit('SET_TOKEN', data.token)
             resolve()
           }else {

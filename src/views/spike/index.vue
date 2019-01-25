@@ -89,10 +89,6 @@
             size="mini"
             type="danger"
             @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <!-- <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -175,29 +171,25 @@
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
           </el-form-item>
-          <div class="dialog-input">
-
-          </div>
+          <div class="dialog-input"></div>
         </div>
         <div class="ueditor">
           <h2>商品介绍</h2>
-          <!-- <el-form-item label="商品介绍"> -->
-            <wang-editor class="wangUeitors" ref="wangUeitors"></wang-editor>
-          <!-- </el-form-item> -->
+          <wang-editor class="wangUeitors" ref="wangUeitors"></wang-editor>
         </div>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-          <el-button @click="spikeDialog = false">取 消</el-button>
-          <el-button type="primary" @click="handlePublic('ruleForm')">确 定</el-button>
-        </div>
+        <el-button @click="spikeDialog = false">取 消</el-button>
+        <el-button type="primary" @click="handlePublic('ruleForm')">确 定</el-button>
+      </div>
     </el-dialog>
  </div>
 </template>
 
 <script>
 import { upload } from '@/mixins';
-import WangEditor from '@/components/WangEditor'
+import WangEditor from '@/components/WangEditor';
 import { spikeActiveList, spikeActivePublish } from '@/api/spike';
 
 const publicDateInit = {
@@ -214,6 +206,7 @@ const publicDateInit = {
       }
 
  export default {
+   name: 'spikeList',
    mixins: [upload],
    data () {
      return {
@@ -270,11 +263,12 @@ const publicDateInit = {
    },
    methods: {
      async init() {
-       return new Promise( async (resolve, reject) => {
-        let res = await spikeActiveList(this.query);
-        this.bannerData = res.data.list;
-        this.pageInfo = { page: res.data.page, total_page: res.data.total_page };
-       })
+        return new Promise( async (resolve, reject) => {
+          let res = await spikeActiveList(this.query);
+          this.bannerData = res.data.list;
+          this.pageInfo = { page: res.data.page, total_page: res.data.total_page };
+          resolve()
+        })
      },
      handleEdit(index, item) {
       //  this.updateDialog = item;
@@ -300,7 +294,7 @@ const publicDateInit = {
                 message: res.data.msg,
                 type: 'success'
               });
-              await this.init();
+              await this.init()
               this.spikeDialog = false;
             }else {
               this.$message.error(res.data.msg);
