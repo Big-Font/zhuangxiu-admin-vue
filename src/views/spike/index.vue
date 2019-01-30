@@ -97,7 +97,9 @@
       style="width: 100%; text-align: center; margin-top: 20px;"
       background
       layout="prev, pager, next"
-      :total="pageInfo.total_page">
+      @current-change="handleCurrentPage"
+      :current-page.sync="pageInfo.page"
+      :page-count="pageInfo.total_page">
     </el-pagination>
     <!-- 修改的弹出框 -->
     <el-dialog title="发布秒杀活动" :fullscreen="true" :visible.sync="spikeDialog" center @close="dialogClose">
@@ -313,6 +315,10 @@ const publicDateInit = {
       this.uploadImgUrl = '';
       this.updateDialog = publicDateInit;
     },
+    async handleCurrentPage() {
+      this.query.page = this.pageInfo.page;
+      await this.init();
+    }
    }
  }
 </script>

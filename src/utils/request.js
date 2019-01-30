@@ -27,13 +27,20 @@ service.interceptors.request.use(config => {
 
 // respone interceptor
 service.interceptors.response.use(response => {
-  console.log(response)
-  if(response.data.code != 0) {
+  console.log(response.status)
+  if(response.data.code !== 0) {
     console.log('进入相应拦截器错误处理了')
     Message.error(response.data.msg);
   }
   return response
 }, error => {
+  switch(error.response.status) {
+    case 401:
+      // 登录过期，清除token
+      sessionStorage.removeItem('JASON_BLOG_TOKEN');
+      store.commit('SET_TOKEN','');
+      break;
+  }
   console.log('err' + error) // for debug
   return Promise.reject(error)
 })

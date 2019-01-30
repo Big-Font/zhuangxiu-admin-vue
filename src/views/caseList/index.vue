@@ -68,7 +68,9 @@
       style="width: 100%; text-align: center; margin-top: 20px;"
       background
       layout="prev, pager, next"
-      :total="total_page">
+      @current-change="handleCurrentPage"
+      :current-page.sync="page"
+      :page-count="total_page">
     </el-pagination>
     <!-- 添加对话框 -->
     <el-dialog title="发布装修案例" :fullscreen="true" :visible.sync="publicDialog" center @close="dialogClose">
@@ -215,8 +217,8 @@ export default {
       return new Promise( async (resolve, reject) => {
         let res = await caseList({page: this.page});
         this.formData = res.data.list;
-        this.page = res.data.page;
-        this.total_page = res.data.total_page;
+        this.page = Number(res.data.page);
+        this.total_page = Number(res.data.total_page);
         resolve();
       })
     },
@@ -260,6 +262,9 @@ export default {
     },
     handleEdit(index, item) {
 
+    },
+    async handleCurrentPage() {
+      await this.init();
     }
   }
 }

@@ -32,3 +32,16 @@ export const upload = {
     },
   }
 }
+
+export const pagination = {
+  data() {
+    return {
+      total_page: 0,
+    }
+  },
+  methods: {
+    async handleCurrentPage() {
+      await this.init();
+    },
+  }
+}
