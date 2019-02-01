@@ -84,11 +84,9 @@
         <div class="item">
           <el-form-item class="dialog-input" label="id">
             <div>{{updateDialog.id}}</div>
-            <!-- <el-input v-model="updateDialog.id" placeholder="" :disabled="true"></el-input> -->
           </el-form-item>
           <el-form-item class="dialog-input" label="标题">
             <div>{{updateDialog.title}}</div>
-            <!-- <el-input v-model="updateDialog.title" placeholder="" :disabled="true"></el-input> -->
           </el-form-item>
         </div>
       </el-form>
@@ -96,11 +94,9 @@
         <div class="item">
           <el-form-item class="dialog-input" label="地址">
             <div>{{updateDialog.address}}</div>
-            <!-- <el-input v-model="updateDialog.address" placeholder="" :disabled="true"></el-input> -->
           </el-form-item>
           <el-form-item class="dialog-input" label="手机号">
             <div>{{updateDialog.phone}}</div>
-            <!-- <el-input v-model="updateDialog.phone" placeholder="" :disabled="true"></el-input> -->
           </el-form-item>
         </div>
       </el-form>

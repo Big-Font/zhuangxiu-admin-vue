@@ -39,6 +39,7 @@ service.interceptors.response.use(response => {
       // 登录过期，清除token
       sessionStorage.removeItem('JASON_BLOG_TOKEN');
       store.commit('SET_TOKEN','');
+      location.reload();
       break;
   }
   console.log('err' + error) // for debug

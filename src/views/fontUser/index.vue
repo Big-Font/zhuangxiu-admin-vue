@@ -1,68 +1,131 @@
 <template>
- <div>
-   账号：<input type="text" v-model="phone"> <br>
-   验证码： <input type="text" v-model="code">
-   <div class="fr">
-      <img :src="baseUrl+'/captcha'" alt="">
+ <div class="m-user">
+  <!-- 查询和添加 -->
+  <div class="header-option">
+    <div>
+      <div class="item">
+         <h4>手机号</h4>
+         <el-input v-model="query.phone" placeholder="按手机号模糊查询"></el-input>
+      </div>
+      <div class="item">
+        <h4>用户名</h4>
+        <el-input v-model="query.username" placeholder="按用户名模糊查询"></el-input>
+      </div>
+      <div class="item">
+        <h4>姓名</h4>
+        <el-input v-model="query.name" placeholder="按姓名查询"></el-input>
+      </div>
+      <el-button type="primary" @click="handleQuery">查询</el-button>
     </div>
+  </div>
+  <!-- 表格 -->
+  <el-table
+  :data="formData"
+  :border="true"
+  style="width: 90%; margin: 20px auto;">
+    <el-table-column
+      label="id"
+      align="center">
+      <template slot-scope="scope">
+        <div>{{ scope.row.id }} </div>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="手机号"
+      align="center">
+      <template slot-scope="scope">
+        <div>{{ scope.row.phone }} </div>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="真实姓名"
+      align="center">
+      <template slot-scope="scope">
+        <div>{{ scope.row.name }} </div>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="地址"
+      align="center">
+      <template slot-scope="scope">
+        <div>{{ scope.row.address }} </div>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="用户昵称"
+      align="center">
+      <template slot-scope="scope">
+        <div>{{ scope.row.username }} </div>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="性别"
+      align="center">
+      <template slot-scope="scope">
+        <div>{{ scope.row.sex }} </div>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="年龄"
+      align="center">
+      <template slot-scope="scope">
+        <div>{{ scope.row.age }} </div>
+      </template>
+    </el-table-column>
+  </el-table>
+  <!-- 分页 -->
+  <el-pagination
+    style="width: 100%; text-align: center; margin-top: 20px;"
+    background
+    layout="prev, pager, next"
+    @current-change="handleCurrentPage"
+    :current-page.sync="query.page"
+    :page-count="total_page">
+  </el-pagination>
 
-    <div @click="reg">登录</div>
-    <h1>发布找师傅</h1>
-    <div @click="addWork">发布</div>
  </div>
 </template>
 
 <script>
+import { pagination } from '@/mixins';
 import { fontBaseUrl } from '@/config'
-import {registerAPI, loginAPI, addWorkerAPI} from '@/api/font';
+import { mUserList } from '@/api/user';
 
- export default {
-   data () {
-     return {
-        phone: '15133228953',
-        code: '',
-        baseUrl: ''
-     }
-   },
-   mounted() {
-      this.baseUrl = fontBaseUrl;
+export default {
+  name: 'mUser',
+  mixins: [pagination],
+  data () {
+    return {
+      query: {
+        page: 1,
+        phone: '',
+        username: '',
+        name: ''
+      },
+      formData: [],
+      total_page: 1
+    }
+  },
+  async mounted() {
+    await this.init();
+  },
+  methods: {
+    async handleQuery() {
+      await this.init();
     },
-   methods: {
-     reg() {
-       registerAPI({
-         phone: this.phone,
-         password: '123456',
-         email: '396689144@qq.com',
-          code: '67C0'
-       })
-       .then( res => {
-         console.log(res)
-       })
-       .catch(err => {
-         console.log(err)
-       })
-     },
-     login() {
-       loginAPI({
-         capkey: this.code,
-         phone: this.phone,
-         password: '123456'
-       })
-       .then( res => {
-         console.log(res)
-       })
-       .catch(err => {
-         console.log(err)
-       })
-     },
-     addWork() {
-
-     }
-   }
- }
+    async init() {
+      return new Promise( async (resolve, reject) => {
+        let res = await mUserList(this.query);
+        this.formData = res.data.list;
+        this.query.page = Number(res.data.page);
+        this.total_page = Number(res.data.total_page);
+        resolve();
+      })
+    }
+  }
+}
 </script>
 
 <style lang='scss' scoped>
-
 
 </style>

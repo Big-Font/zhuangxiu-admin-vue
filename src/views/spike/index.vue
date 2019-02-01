@@ -6,22 +6,27 @@
       <!-- <el-tag>活动显示位置</el-tag> -->
       <div class="item">
         <h4>秒杀活动位置</h4>
-        <el-radio v-model="query.place" label="0">全部</el-radio>
-        <el-radio v-model="query.place" label="1">首页推荐位</el-radio>
-        <el-radio v-model="query.place" label="2">首页列表</el-radio>
-        <el-radio v-model="query.place" label="3">其他位置</el-radio>
+        <el-select v-model="query.place" placeholder="请选择">
+          <el-option
+            v-for="item in placeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </div>
       <div class="item">
         <h4>秒杀活动状态</h4>
-        <el-radio v-model="query.type" label="0">全部</el-radio>
-        <el-radio v-model="query.type" label="1">进行中</el-radio>
-        <el-radio v-model="query.type" label="2">已结束</el-radio>
-        <el-radio v-model="query.type" label="3">未开始</el-radio>
+        <el-select v-model="query.type" placeholder="请选择">
+          <el-option
+            v-for="item in typeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </div>
-    </div>
-
-    <div>
-      <el-button class="btn" type="primary" @click="handleQuery">查询秒杀活动</el-button>
+      <el-button style="margin-left: 50px;" class="btn" type="primary" @click="handleQuery">查询秒杀活动</el-button>
       <el-button class="btn" type="danger" @click="spikeDialog = true;">发布秒杀活动</el-button>
     </div>
   </div>
@@ -78,9 +83,12 @@
         label="活动状态"
         align="center">
         <template slot-scope="scope">
-          <div v-if="scope.row.spike_type == 1">未开始</div>
+          <el-tag v-if="scope.row.spike_type == 1">未开始</el-tag>
+          <el-tag type="success" v-if="scope.row.spike_type == 2">进行中</el-tag>
+          <el-tag type="info" v-if="scope.row.spike_type == 3">已结束</el-tag>
+          <!-- <div v-if="scope.row.spike_type == 1">未开始</div>
           <div v-if="scope.row.spike_type == 2">进行中</div>
-          <div v-if="scope.row.spike_type == 3">已结束</div>
+          <div v-if="scope.row.spike_type == 3">已结束</div> -->
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
@@ -217,6 +225,18 @@ const publicDateInit = {
         type: '0',
         page: '1'
        },
+       placeOptions: [
+         { value: '0', label: '全部' },
+         { value: '1', label: '首页推荐位' },
+         { value: '2', label: '首页列表' },
+         { value: '3', label: '其他位置' },
+       ],
+       typeOptions: [
+         { value: '0', label: '全部' },
+         { value: '1', label: '未开始' },
+         { value: '2', label: '进行中' },
+         { value: '3', label: '已结束' },
+       ],
        bannerData: [],
        pageInfo: {
          total_page: 0,
