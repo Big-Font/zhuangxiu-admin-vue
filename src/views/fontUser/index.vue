@@ -88,7 +88,6 @@
 
 <script>
 import { pagination } from '@/mixins';
-import { fontBaseUrl } from '@/config'
 import { mUserList } from '@/api/user';
 
 export default {

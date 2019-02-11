@@ -6,16 +6,14 @@
       style="width: 80%; margin: 20px auto;">
       <el-table-column
         label="id"
-        align="center"
-        width="60">
+        align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.banner_id }} </div>
         </template>
       </el-table-column>
       <el-table-column
         label="名称"
-        align="center"
-        width="180">
+        align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.banner_name }} </div>
         </template>
@@ -29,17 +27,33 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="类型"
+        align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.type == 0">外部链接</div>
+          <div v-if="scope.row.type == 1">装修案例</div>
+          <div v-if="scope.row.type == 2">秒杀活动</div>
+          <div v-if="scope.row.type == 3">装修资讯</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="类型id"
+        align="center">
+        <template slot-scope="scope">
+          <div>{{scope.row.infoId}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
         label="跳转链接"
         align="center"
         width="180">
         <template slot-scope="scope">
-          <div>{{scope.row.banner_path}}</div>
+          <div>{{scope.row.type == 0 ? scope.row.banner_path : '非外部链接'}}</div>
         </template>
       </el-table-column>
       <el-table-column
         label="更新时间"
-        align="center"
-        width="180">
+        align="center">
         <template slot-scope="scope">
           <div>{{scope.row.banner_update_time}}</div>
         </template>
@@ -81,7 +95,20 @@
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="跳转链接" :label-width="formLabelWidth">
+        <el-form-item label="类型选择" :label-width="formLabelWidth">
+          <el-select v-model="form.type" placeholder="请选择">
+            <el-option
+              v-for="item in typeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="form.type != '0'" label="内部链接跳转id" :label-width="formLabelWidth">
+          <el-input style="width: 400px;" v-model="form.infoId" ></el-input>
+        </el-form-item>
+        <el-form-item v-else label="跳转链接" :label-width="formLabelWidth">
           <el-input style="width: 400px;" v-model="form.banner_path" ></el-input>
         </el-form-item>
       </el-form>
@@ -101,6 +128,12 @@ import { getBannerList, bannerModify } from '@/api/banner';
  export default {
    data () {
      return {
+       typeOptions: [
+          { value: '0', label: '外部链接'},
+          { value: '1', label: '装修案例'},
+          { value: '2', label: '秒杀活动'},
+          { value: '3', label: '装修资讯'},
+       ],
        bannerData: [],
        form: {},
        fileList: [],
@@ -148,9 +181,11 @@ import { getBannerList, bannerModify } from '@/api/banner';
         try{
           let res = await bannerModify({
             banner_id: this.form.banner_id,
-            banner_url: this.uploadImgUrl,
-            banner_path: this.form.banner_path,
-            banner_name: this.form.banner_name
+            banner_url: this.uploadImgUrl ? this.uploadImgUrl : this.form.banner_url,
+            banner_path: this.form.type != '0' ? null : this.form.banner_path,
+            banner_name: this.form.banner_name,
+            type: this.form.type,
+            infoId: this.form.infoId
           });
           this.$message({
             message: res.data.msg,

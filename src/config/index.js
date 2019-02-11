@@ -7,22 +7,20 @@
  *
  */
 // const baseUrl = 'https://qingruiserver.wangshen.top'
-const baseUrl = 'http://127.0.0.1:5000/admin'
-const fontBaseUrl = 'http://127.0.0.1:5000/api'
-const routerMode = ''
-const baseImgPath = ''
+let baseUrl;
+let routerMode = ''
+let baseImgPath = ''
 
-// if (process.env.NODE_ENV == 'development') {
-//     baseUrl = 'http://walnuts.wangshen.top/apis';
-//     baseImgPath = '';
-// } else {
-//     baseUrl = 'http://walnuts.wangshen.top/apis';
-//     baseImgPath = '';
-// }
+if (process.env.NODE_ENV == 'development') {
+    baseUrl = 'http://127.0.0.1:5000/admin';
+    baseImgPath = '';
+} else {
+    baseUrl = 'https://qingruiserver.wangshen.top/admin';
+    baseImgPath = '';
+}
 
 export {
   baseUrl,
-  fontBaseUrl,
   routerMode,
   baseImgPath
 }

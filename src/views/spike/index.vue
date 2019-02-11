@@ -86,9 +86,6 @@
           <el-tag v-if="scope.row.spike_type == 1">未开始</el-tag>
           <el-tag type="success" v-if="scope.row.spike_type == 2">进行中</el-tag>
           <el-tag type="info" v-if="scope.row.spike_type == 3">已结束</el-tag>
-          <!-- <div v-if="scope.row.spike_type == 1">未开始</div>
-          <div v-if="scope.row.spike_type == 2">进行中</div>
-          <div v-if="scope.row.spike_type == 3">已结束</div> -->
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
