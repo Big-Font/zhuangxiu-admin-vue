@@ -11,6 +11,12 @@ import { baseUrl } from '@/config'
 
 export default({
     name:"MyWangEditor",
+    props: {
+      editorDefault: {
+        type: String,
+        default: ''
+      }
+    },
     data(){
         return {
             editorContent : "", //内容,
@@ -38,6 +44,7 @@ export default({
         　　　　　　};*/
         this.toListenUp(this.editor);//监听上传的各个阶段
         this.editor.create();
+        this.editor.txt.text(this.editorDefault);
     },
     methods:{
         getwangUditorHtml() {

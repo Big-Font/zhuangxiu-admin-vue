@@ -18,3 +18,12 @@ export function fitupCasePublic(data) {
     data: qs.stringify(data)
   })
 }
+
+// 修改装修案例接口
+export function fitupcaseModify(data) {
+  return request({
+    url: '/fitupcaseModify',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}

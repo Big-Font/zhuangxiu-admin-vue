@@ -124,6 +124,27 @@ export const constantRouterMap = [
       }
     ]
   },
+  // 商品管理
+  {
+    path: '/goods',
+    component: Layout,
+    name: 'goods',
+    meta: { title: '商品管理', icon: 'peoples' },
+    children: [
+      {
+        path: 'category',
+        name: 'category',
+        component: () => import('@/views/category'),
+        meta: { title: '分类管理', icon: 'nested' }
+      },
+      {
+        path: 'good',
+        name: 'good',
+        component: () => import('@/views/good'),
+        meta: { title: '商品管理', icon: 'nested' }
+      }
+    ]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
 ]

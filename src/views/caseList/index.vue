@@ -2,7 +2,7 @@
   <div class="case-list">
     <!-- 查找和添加 -->
     <div class="header-option">
-      <el-button type="danger" @click="publicDialog=true;">发布装修案例</el-button>
+      <el-button type="danger" @click="publicCaseList">发布装修案例</el-button>
     </div>
     <!-- 表格 -->
     <el-table
@@ -54,8 +54,12 @@
           <div v-if="scope.row.recommend == 1">推荐</div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="操作" width="150">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="primary"
+            @click="handleEditList(scope.$index, scope.row)">查看</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -72,8 +76,8 @@
       :current-page.sync="page"
       :page-count="total_page">
     </el-pagination>
-    <!-- 添加对话框 -->
-    <el-dialog title="发布装修案例" :fullscreen="true" :visible.sync="publicDialog" center @close="dialogClose">
+    <!-- 添加和发布 -->
+    <el-dialog :title="dialogTitle" :fullscreen="true" :visible.sync="publicDialog" center @close="dialogClose">
       <el-form class="public-form" label-position="left" :rules="rules" ref="ruleForm" label-width="100px" :model="updateDialog">
         <div class="item">
           <el-form-item class="dialog-input" label="标题" prop="title">
@@ -110,6 +114,7 @@
         </div>
         <div class="item">
           <el-form-item class="dialog-input" label="活动简图" prop="img">
+            <img v-if="updateDialog.img" style="width:260px;height:180px;" :src="updateDialog.img" alt="">
             <el-upload
               class="upload-demo"
               :action="actionBaseUrl"
@@ -127,7 +132,7 @@
         </div>
         <div class="ueditor">
           <h2>文章内容</h2>
-          <wang-editor class="wangUeitors" ref="wangUeitors"></wang-editor>
+          <wang-editor v-if="publicDialog" class="wangUeitors" :editorDefault="editorDefault" ref="wangUeitors"></wang-editor>
         </div>
       </el-form>
 
@@ -136,13 +141,66 @@
         <el-button type="primary" @click="handlePublic('ruleForm')">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 查看 -->
+    <el-dialog title="装修案例详情" :fullscreen="true" :visible.sync="listDialog" center>
+      <el-form class="public-form" label-position="left" ref="ruleForm" label-width="100px" :model="showDialog">
+        <div class="item">
+          <el-form-item class="dialog-input" label="标题" prop="title">
+            <div>{{showDialog.title}}</div>
+          </el-form-item>
+          <el-form-item class="dialog-input" label="作者" prop="author">
+            <div>{{showDialog.author}}</div>
+          </el-form-item>
+        </div>
+        <div class="item">
+          <el-form-item class="dialog-input" label="使用面积" prop="area">
+            <div>{{showDialog.area}}</div>
+          </el-form-item>
+          <el-form-item class="dialog-input" label="户型" prop="apartment">
+            <div>{{showDialog.apartment}}</div>
+          </el-form-item>
+        </div>
+        <div class="item">
+          <el-form-item class="dialog-input" label="装修总花费" prop="spend">
+            <div>{{showDialog.spend}}</div>
+          </el-form-item>
+          <el-form-item class="dialog-input" label="装修风格" prop="style">
+            <div>{{showDialog.style}}</div>
+          </el-form-item>
+        </div>
+        <div class="item">
+          <el-form-item class="dialog-input" label="装修公司" prop="company">
+            <div>{{showDialog.company}}</div>
+          </el-form-item>
+          <el-form-item class="dialog-input" label="推荐首页" prop="recommend" >
+            <el-radio v-model="showDialog.recommend" label="0">推荐</el-radio>
+            <el-radio v-model="showDialog.recommend" label="1">不推荐</el-radio>
+          </el-form-item>
+        </div>
+        <div class="item">
+          <el-form-item class="dialog-input" label="活动简图" prop="img">
+            <img v-if="showDialog.img" style="width:260px;height:180px;" :src="showDialog.img" alt="">
+          </el-form-item>
+          <div class="dialog-input"></div>
+        </div>
+        <div class="ueditor">
+          <h2>文章内容</h2>
+          <div class="show-content" v-html="showDialog.content"></div>
+          <!-- <wang-editor v-if="publicDialog" class="wangUeitors" :editorDefault="editorDefault" ref="wangUeitors"></wang-editor> -->
+        </div>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="listDialog = false">关闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { upload } from '@/mixins';
 import WangEditor from '@/components/WangEditor';
-import { caseList, fitupCasePublic } from '@/api/caseList';
+import { caseList, fitupCasePublic, fitupcaseModify } from '@/api/caseList';
 
 const publicDateInit = {
   title: '',
@@ -162,10 +220,26 @@ export default {
   mixins: [upload],
   data () {
     return {
+      dialogTitle: '发布装修案例',
+      editorDefault: '',
+      dialogType: 'publish',
+      listDialog: false,
       page: 1,
       total_page: 0,
       formData: [],
       publicDialog: false,
+      showDialog: {
+        title: '',
+        author: '',
+        recommend: '',
+        titleImg: '',
+        area: '',
+        apartment: '',
+        spend: '',
+        style: '',
+        company: '',
+        content: '',
+      },
       updateDialog: {
         title: '',
         author: '',
@@ -229,30 +303,59 @@ export default {
         this.$message.error('请填写文章内容，用于展示装修案例详情');
         return;
       }
-      if(!this.uploadImgUrl){
-        this.$message.error('请上传活动简图');
-        return;
-      }else {
-        this.updateDialog.titleImg = this.uploadImgUrl;
-      }
-      this.$refs[formName].validate( async (valid) => {
-        if (valid) {
-          let res = await fitupCasePublic(this.updateDialog)
-          if(res.data.code === 0) {
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            });
-            await this.init();
-            this.publicDialog = false;
-          }else {
-            this.$message.error(res.data.msg);
-          }
+      if(this.dialogType === 'publish') {
+        // 发布装修案例   dialogType = 'publish';
+        if(!this.uploadImgUrl){
+          this.$message.error('请上传活动简图');
+          return;
         }else {
-          console.log('error submit!!');
-          return false;
+          this.updateDialog.titleImg = this.uploadImgUrl;
         }
-      })
+        this.$refs[formName].validate( async (valid) => {
+          if (valid) {
+            let res = await fitupCasePublic(this.updateDialog)
+            if(res.data.code === 0) {
+              this.$message({
+                message: res.data.msg,
+                type: 'success'
+              });
+              await this.init();
+              this.publicDialog = false;
+            }else {
+              this.$message.error(res.data.msg);
+            }
+          }else {
+            console.log('error submit!!');
+            return false;
+          }
+        })
+      }else if(this.dialogType === 'modeify') {
+        // 修改装修案例  this.dialogType === 'modeify'
+        console.log(`图片上传：${this.uploadImgUrl}，默认图片： ${this.updateDialog.img}`)
+        this.updateDialog.titleImg = this.uploadImgUrl ? this.uploadImgUrl : this.updateDialog.img;
+        if(!this.updateDialog.titleImg) {
+          this.$message.error('请上传活动简图');
+          return;
+        }
+        this.$refs[formName].validate( async (valid) => {
+          if (valid) {
+            let res = await fitupcaseModify(this.updateDialog)
+            if(res.data.code === 0) {
+              this.$message({
+                message: res.data.msg,
+                type: 'success'
+              });
+              await this.init();
+              this.publicDialog = false;
+            }else {
+              this.$message.error(res.data.msg);
+            }
+          }else {
+            console.log('error submit!!');
+            return false;
+          }
+        })
+      }
     },
     // 关闭发布对话框
     dialogClose() {
@@ -260,8 +363,26 @@ export default {
       this.uploadImgUrl = '';
       // this.updateDialog = publicDateInit;
     },
+    // 发布装修案例
+    publicCaseList() {
+      this.updateDialog  = publicDateInit;
+      this.editorDefault = '';
+      this.dialogTitle = '发布装修案例';
+      this.dialogType = 'publish';
+      this.publicDialog = true;
+    },
+    // 修改装修案例
     handleEdit(index, item) {
-
+      this.updateDialog  = item;
+      this.editorDefault = item.content;
+      this.dialogTitle = '修改装修案例';
+      this.dialogType = 'modeify';
+      this.publicDialog = true;
+    },
+    // 查看装修案例
+    handleEditList(index, item) {
+      this.showDialog  = item;
+      this.listDialog = true;
     },
     async handleCurrentPage() {
       await this.init();
@@ -290,6 +411,15 @@ export default {
     .wangUeitors{
       width: 80%;
       margin: 10px auto;
+    }
+  }
+  .show-content{
+    border: 1px solid #ccc;
+    width: 680px;
+    padding: 0 20px;
+    margin: 10px auto;
+    /deep/ img{
+      width: 100%;
     }
   }
 }

@@ -55,7 +55,7 @@
         label="更新时间"
         align="center">
         <template slot-scope="scope">
-          <div>{{scope.row.banner_update_time}}</div>
+          <div>{{scope.row.banner_update_time.split(' ')[0]}}</div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
