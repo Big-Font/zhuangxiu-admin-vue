@@ -138,10 +138,28 @@ export const constantRouterMap = [
         meta: { title: '分类管理', icon: 'nested' }
       },
       {
+        path: 'sellers',
+        name: 'sellers',
+        component: () => import('@/views/sellers'),
+        meta: { title: '商家管理', icon: 'nested' }
+      },
+      {
+        path: 'brand',
+        name: 'brand',
+        component: () => import('@/views/brand'),
+        meta: { title: '品牌管理', icon: 'nested' }
+      },
+      {
         path: 'good',
         name: 'good',
         component: () => import('@/views/good'),
         meta: { title: '商品管理', icon: 'nested' }
+      },
+      {
+        path: 'shopCar',
+        name: 'shopCar',
+        component: () => import('@/views/shopCar'),
+        meta: { title: '购物车管理', icon: 'nested' }
       }
     ]
   },

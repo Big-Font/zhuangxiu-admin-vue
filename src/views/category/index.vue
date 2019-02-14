@@ -1,20 +1,33 @@
 <template>
- <div>
-   商品分类管理
- </div>
+  <div>
+    <el-tree :data="list" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+  </div>
 </template>
 
 <script>
- export default {
-   data () {
-     return {
+import { categoryList } from '@/api/goods';
 
-     }
-   },
-   components: {
-
-   }
- }
+export default {
+  data () {
+    return {
+      list: [],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
+    }
+  },
+  async mounted() {
+    let res = await categoryList();
+    console.log(res.data.result)
+    this.list = res.data.result;
+  },
+  methods: {
+    handleNodeClick(data) {
+      console.log(data);
+    }
+  }
+}
 </script>
 
 <style lang='scss' scoped>
