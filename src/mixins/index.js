@@ -37,6 +37,7 @@ export const pagination = {
   data() {
     return {
       total_page: 0,
+      page: 1,
     }
   },
   methods: {

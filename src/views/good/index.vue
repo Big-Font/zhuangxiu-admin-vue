@@ -1,10 +1,39 @@
 <template>
   <div class="goods-list">
+    <!-- 筛选条件 -->
+    <div class="header-option">
+      <div>
+        <div class="item">
+          <h4>商品名称</h4>
+          <el-input v-model="query.name" placeholder="按商品名称模糊查询"></el-input>
+        </div>
+        <div class="item">
+          <h4>商家</h4>
+          <el-input v-model="query.seller" placeholder="按商品品牌模糊查询"></el-input>
+        </div>
+        <div class="item">
+          <h4>品牌</h4>
+          <el-input v-model="query.brand" placeholder="按商品品牌模糊查询"></el-input>
+        </div>
+        <div class="item">
+          <h4>商品类别</h4>
+          <el-cascader
+            placeholder="请选择商品类别"
+            :options="typeList"
+            v-model="queryTypeSelectedOption"
+          ></el-cascader>
+        </div>
+      </div>
+      <div>
+        <el-button type="primary" @click="handleQuery">查询</el-button>
+        <el-button type="danger" @click="handlePublishGoods">添加</el-button>
+      </div>
+    </div>
     <!-- 表格 -->
     <el-table
       :data="formData"
       :border="true"
-      style="width: 80%; margin: 20px auto;">
+      style="width: 90%; margin: 20px auto;">
       <el-table-column
         label="id"
         align="center">
@@ -113,7 +142,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item class="dialog-input" label="商品类别" prop="typeSelectedOption">
+          <el-form-item class="dialog-input" label="商品类别">
             <el-cascader
               :options="typeList"
               v-model="updateDialog.typeSelectedOption"
@@ -155,9 +184,9 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-          <el-button @click="publicDialog = false">取 消</el-button>
-          <el-button type="primary" @click="handlePublic('ruleForm')">确 定</el-button>
-        </div>
+        <el-button @click="publicDialog = false">取 消</el-button>
+        <el-button type="primary" @click="handlePublic('ruleForm')">确 定</el-button>
+      </div>
     </el-dialog>
     <!-- 查看弹出层 -->
     <el-dialog title="商品详情" :fullscreen="true" :visible.sync="listDialog" center>
@@ -211,13 +240,36 @@
 <script>
 import { upload, pagination } from '@/mixins';
 import WangEditor from '@/components/WangEditor';
-import { getGoods, getBrandList, getSellersList, categoryList } from '@/api/goods';
+import { getGoods,goodsInfoUpdateList, categoryList } from '@/api/goods';
+
+let initUpdateDialog = {
+    brandId: '',
+    genreId: '',
+    sellerId: '',
+    name: "",
+    brand: "",
+    price: "",
+    tag: "",
+    introduce: "",
+    img: "",
+    seller: "",
+    type: "",
+    detail: "",
+    typeSelectedOption: [],
+};
 
 export default {
   name: 'goods',
   mixins: [upload, pagination],
   data () {
     return {
+      query: {
+        name: '',
+        seller: '',
+        brand: '',
+        typeId: '',
+      },
+      queryTypeSelectedOption: [],
       formData: [],
       showDialog: {},
       fileList: [],
@@ -257,7 +309,6 @@ export default {
       brandList: [],   //商品品牌列表
       sellerList: [],  // 商家列表
       typeList: [],    // 商品类型列表
-
       editorDefault: '',
       publicDialog: false,
       page: 1,
@@ -269,6 +320,7 @@ export default {
   },
   async mounted() {
     await this.init();
+    await this.categoryList();
   },
   methods: {
     handleEditList(index, item) {
@@ -280,9 +332,7 @@ export default {
       this.editorDefault = item.detail;
       this.dialogTitle = '修改商品信息';
       this.dialogType = 'modeify';
-      await this.handleBrandList();
-      await this.handleSellerList();
-      await this.handleTypeList();
+      await this.handleGetQueryList();
       // 获取分类id
       let selectedArr = this.updateDialog.tree.split('_');
       this.updateDialog.typeSelectedOption = selectedArr.map(item => {
@@ -294,7 +344,17 @@ export default {
     dialogClose() {
       this.fileList = [];
       this.uploadImgUrl = '';
-      // this.updateDialog = publicDateInit;
+      this.updateDialog = initUpdateDialog;
+    },
+    // 发布商品
+    handlePublishGoods() {
+
+    },
+    // 查询商品
+    async handleQuery() {
+      let typeId = this.queryTypeSelectedOption.length ? this.queryTypeSelectedOption[this.queryTypeSelectedOption.length-1] : '';
+      this.query.typeId = typeId;
+      await this.init();
     },
     // 修改和发布商品信息
     handlePublic(formName) {
@@ -319,7 +379,9 @@ export default {
     },
     async init() {
       return new Promise( async(resolve, reject) => {
-        let res = await getGoods();
+        let page = this.page;
+        let query = { page, ...this.query, }
+        let res = await getGoods(this.query);
         console.log(res);
         this.formData = res.data.list;
         this.page = Number(res.data.page);
@@ -327,24 +389,20 @@ export default {
         resolve();
       })
     },
-    async handleBrandList() {
+    async handleGetQueryList() {
       return new Promise(async (resolve, reject) => {
-        let res = await getBrandList();
-        this.brandList = res.data.list;
+        let res = await goodsInfoUpdateList();
+        this.brandList = res.data.brandList;
+        this.sellerList = res.data.sellerList;
+        this.typeList = res.data.typeList;
         resolve();
       })
     },
-    async handleSellerList() {
-      return new Promise(async (resolve, reject) => {
-        let res = await getSellersList();
-        this.sellerList = res.data.list;
-        resolve();
-      })
-    },
-    async handleTypeList() {
+    async categoryList() {
       return new Promise(async (resolve, reject) => {
         let res = await categoryList();
         this.typeList = res.data.result;
+        this.typeList.unshift({value: '', label:'不选择'})
         resolve();
       })
     }

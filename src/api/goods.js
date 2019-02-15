@@ -19,6 +19,15 @@ export function getGoods(data) {
   })
 }
 
+// 商品列表中品牌、商家、类别查询接口--用于商品信息修改和发布
+export function goodsInfoUpdateList(data) {
+  return request({
+    url: '/goodsInfoUpdateList',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
 // 获取商品品牌列表
 export function getBrandList(data) {
   return request({
@@ -32,6 +41,24 @@ export function getBrandList(data) {
 export function getSellersList(data) {
   return request({
     url: '/getSellersList',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+// 添加商家信息
+export function publicSellerInfo(data) {
+  return request({
+    url: '/publicSellerInfo',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+// 商家信息修改
+export function modeifySellerInfo(data) {
+  return request({
+    url: '/modeifySellerInfo',
     method: 'post',
     data: qs.stringify(data)
   })
