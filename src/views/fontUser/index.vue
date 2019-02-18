@@ -62,14 +62,15 @@
       label="性别"
       align="center">
       <template slot-scope="scope">
-        <div>{{ scope.row.sex }} </div>
+        <div v-if="scope.row.sex == 1">男</div>
+        <div v-if="scope.row.sex == 2">女</div>
       </template>
     </el-table-column>
     <el-table-column
       label="年龄"
       align="center">
       <template slot-scope="scope">
-        <div>{{ scope.row.age }} </div>
+        <div v-if="scope.row.age != null">{{ scope.row.age }}岁</div>
       </template>
     </el-table-column>
   </el-table>

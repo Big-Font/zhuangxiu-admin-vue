@@ -129,19 +129,19 @@ export const constantRouterMap = [
     path: '/goods',
     component: Layout,
     name: 'goods',
-    meta: { title: '商品管理', icon: 'peoples' },
+    meta: { title: '商品管理', icon: 'clipboard' },
     children: [
       {
         path: 'category',
         name: 'category',
         component: () => import('@/views/category'),
-        meta: { title: '分类管理', icon: 'nested' }
+        meta: { title: '分类管理', icon: 'tree' }
       },
       {
         path: 'sellers',
         name: 'sellers',
         component: () => import('@/views/sellers'),
-        meta: { title: '商家管理', icon: 'nested' }
+        meta: { title: '商家管理', icon: 'people' }
       },
       {
         path: 'brand',
@@ -153,13 +153,13 @@ export const constantRouterMap = [
         path: 'good',
         name: 'good',
         component: () => import('@/views/good'),
-        meta: { title: '商品管理', icon: 'nested' }
+        meta: { title: '商品管理', icon: 'international' }
       },
       {
         path: 'shopCar',
         name: 'shopCar',
         component: () => import('@/views/shopCar'),
-        meta: { title: '购物车管理', icon: 'nested' }
+        meta: { title: '购物车管理', icon: 'list' }
       }
     ]
   },

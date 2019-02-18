@@ -37,6 +37,33 @@ export function getBrandList(data) {
   })
 }
 
+// 发布品牌信息
+export function publicBrandInfo(data) {
+  return request({
+    url: '/publicBrandInfo',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+// 修改品牌信息 modeifyBrandInfo
+export function modeifyBrandInfo(data) {
+  return request({
+    url: '/modeifyBrandInfo',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+// 查询所有商家（不分页） getSellersListNoPage
+export function getSellersListNoPage(data) {
+  return request({
+    url: '/getSellersListNoPage',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
 // 获取商家列表
 export function getSellersList(data) {
   return request({

@@ -124,7 +124,7 @@
             <el-select v-model="updateDialog.brandId" filterable placeholder="请选择商品品牌">
               <el-option
                 v-for="item in brandList"
-                :key="item.name"
+                :key="item.id"
                 :label="item.name"
                 :value="item.id">
               </el-option>
@@ -136,8 +136,8 @@
             <el-select v-model="updateDialog.sellerId" filterable placeholder="请选择商家">
               <el-option
                 v-for="item in sellerList"
-                :key="item.seller"
-                :label="item.seller"
+                :key="item.name"
+                :label="item.name"
                 :value="item.id">
               </el-option>
             </el-select>

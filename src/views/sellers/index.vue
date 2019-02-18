@@ -276,7 +276,7 @@ export default {
         }).catch((err) => {
           this.$message({
             type: 'info',
-            message: `已取消删除操作${err}`
+            message: `已取消删除操作`
           });
         });
     },
