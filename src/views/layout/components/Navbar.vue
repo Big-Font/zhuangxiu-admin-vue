@@ -2,6 +2,10 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
+    <!-- 全屏 -->
+    <el-tooltip :content="'全屏显示'" effect="dark" placement="bottom">
+      <screenfull class="screenfull right-menu-item"/>
+    </el-tooltip>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
@@ -10,11 +14,11 @@
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
         <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
-            Home
+            首页
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>
-          <span @click="logout" style="display:block;">LogOut</span>
+          <span @click="logout" style="display:block;">退出登录</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -24,11 +28,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
+import Screenfull from '@/components/Screenfull'
 import Hamburger from '@/components/Hamburger'
 
 export default {
   components: {
     Breadcrumb,
+    Screenfull,
     Hamburger
   },
   computed: {
