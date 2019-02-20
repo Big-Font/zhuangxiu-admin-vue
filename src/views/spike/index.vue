@@ -27,7 +27,7 @@
         </el-select>
       </div>
       <el-button style="margin-left: 50px;" class="btn" type="primary" @click="handleQuery">查询秒杀活动</el-button>
-      <el-button class="btn" type="danger" @click="spikeDialog = true;">发布秒杀活动</el-button>
+      <el-button class="btn" type="danger" @click="publicSpikeList">发布秒杀活动</el-button>
     </div>
   </div>
    <!-- 秒杀活动列表 -->
@@ -39,57 +39,61 @@
         label="id"
         align="center">
         <template slot-scope="scope">
-          <div>{{ scope.row.spike_id }} </div>
+          <div>{{ scope.row.id }} </div>
         </template>
       </el-table-column>
       <el-table-column
         label="秒杀名称"
         align="center">
         <template slot-scope="scope">
-          <div>{{ scope.row.spike_name }} </div>
+          <div>{{ scope.row.name }} </div>
         </template>
       </el-table-column>
       <el-table-column
         label="活动简图"
         align="center">
         <template slot-scope="scope">
-          <img style="width: 100px;height: 60px;" :src="scope.row.spike_img" alt="">
+          <img style="width: 100px;height: 60px;" :src="scope.row.img" alt="">
         </template>
       </el-table-column>
       <el-table-column
         label="活动位置"
         align="center">
         <template slot-scope="scope">
-          <div v-if="scope.row.spike_place == 1">首页推荐位</div>
-          <div v-if="scope.row.spike_place == 2">首页列表</div>
-          <div v-if="scope.row.spike_place == 3">其他位置</div>
+          <div v-if="scope.row.place == 1">首页推荐位</div>
+          <div v-if="scope.row.place == 2">首页列表</div>
+          <div v-if="scope.row.place == 3">其他位置</div>
         </template>
       </el-table-column>
       <el-table-column
         label="开始时间"
         align="center">
         <template slot-scope="scope">
-          <div>{{scope.row.spike_start_time}}</div>
+          <div>{{scope.row.startTime}}</div>
         </template>
       </el-table-column>
       <el-table-column
         label="结束时间"
         align="center">
         <template slot-scope="scope">
-          <div>{{scope.row.spike_end_time}}</div>
+          <div>{{scope.row.endTime}}</div>
         </template>
       </el-table-column>
       <el-table-column
         label="活动状态"
         align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.spike_type == 1">未开始</el-tag>
-          <el-tag type="success" v-if="scope.row.spike_type == 2">进行中</el-tag>
-          <el-tag type="info" v-if="scope.row.spike_type == 3">已结束</el-tag>
+          <el-tag v-if="scope.row.type == 1">未开始</el-tag>
+          <el-tag type="success" v-if="scope.row.type == 2">进行中</el-tag>
+          <el-tag type="info" v-if="scope.row.type == 3">已结束</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="操作" width="150">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="primary"
+            @click="handleEditList(scope.$index, scope.row)">查看</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -107,7 +111,7 @@
       :page-count="pageInfo.total_page">
     </el-pagination>
     <!-- 修改的弹出框 -->
-    <el-dialog title="发布秒杀活动" :fullscreen="true" :visible.sync="spikeDialog" center @close="dialogClose">
+    <el-dialog :title="dialogTitle" :fullscreen="true" :visible.sync="spikeDialog" center @close="dialogClose">
       <el-form class="public-form" label-position="left" :rules="rules" ref="ruleForm" label-width="80px" :model="updateDialog">
         <div class="item">
           <el-form-item class="dialog-input" label="活动名称" prop="name">
@@ -165,6 +169,7 @@
         </div>
         <div class="item">
           <el-form-item class="dialog-input" label="活动简图" prop="img">
+            <img v-if="updateDialog.img" style="width:260px;height:180px;" :src="updateDialog.img" alt="">
             <el-upload
               class="upload-demo"
               :action="actionBaseUrl"
@@ -182,7 +187,7 @@
         </div>
         <div class="ueditor">
           <h2>商品介绍</h2>
-          <wang-editor class="wangUeitors" ref="wangUeitors"></wang-editor>
+          <wang-editor v-if="spikeDialog" class="wangUeitors" ref="wangUeitors" :editorDefault="editorDefault"></wang-editor>
         </div>
       </el-form>
 
@@ -191,13 +196,80 @@
         <el-button type="primary" @click="handlePublic('ruleForm')">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 查看的弹出框 -->
+    <el-dialog title="装修案例详情" :fullscreen="true" :visible.sync="listDialog" center>
+      <el-form class="public-form" label-position="left" label-width="100px" :model="showDialog">
+        <div class="item">
+          <el-form-item class="dialog-input" label="活动名称">
+            <div>{{showDialog.name}}</div>
+          </el-form-item>
+          <el-form-item class="dialog-input" label="产品价格" prop="price">
+            <div>{{showDialog.price}}</div>
+          </el-form-item>
+        </div>
+        <div class="item">
+          <el-form-item class="dialog-input" label="活动介绍">
+            <div>{{showDialog.activity}}</div>
+            <!-- <el-input
+              type="textarea"
+              :rows="2"
+              placeholder="请输入活动介绍"
+              :disabled="true"
+              v-model="showDialog.activity">
+            </el-input> -->
+          </el-form-item>
+          <el-form-item class="dialog-input" label="商家介绍">
+            <div>{{showDialog.seller}}</div>
+            <!-- <el-input
+              type="textarea"
+              :rows="2"
+              placeholder="请输入商家介绍"
+              :disabled="true"
+              v-model="showDialog.seller">
+            </el-input> -->
+          </el-form-item>
+        </div>
+        <div class="item">
+          <el-form-item class="dialog-input" label="商品库存">
+            <div>{{showDialog.stock}}</div>
+          </el-form-item>
+          <el-form-item class="dialog-input" label="活动位置">
+            <el-radio v-model="showDialog.place" label="1">首页推荐位</el-radio>
+            <el-radio v-model="showDialog.place" label="2">首页列表</el-radio>
+            <el-radio v-model="showDialog.place" label="3">其他位置</el-radio>
+          </el-form-item>
+        </div>
+        <div class="item">
+          <el-form-item class="dialog-input" label="开始时间">
+            <div>{{showDialog.startTime}}</div>
+          </el-form-item>
+          <el-form-item class="dialog-input" label="结束时间">
+            <div>{{showDialog.endTime}}</div>
+          </el-form-item>
+        </div>
+        <div class="item">
+          <el-form-item class="dialog-input" label="活动简图" prop="img">
+            <img v-if="showDialog.img" style="width:260px;height:180px;" :src="showDialog.img" alt="">
+          </el-form-item>
+          <div class="dialog-input"></div>
+        </div>
+        <div class="ueditor">
+          <h2>商品介绍</h2>
+          <div class="show-content" v-html="showDialog.goods"></div>
+        </div>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="listDialog = false">关闭</el-button>
+      </div>
+    </el-dialog>
  </div>
 </template>
 
 <script>
 import { upload } from '@/mixins';
 import WangEditor from '@/components/WangEditor';
-import { spikeActiveList, spikeActivePublish } from '@/api/spike';
+import { spikeActiveList, querySpikeDetail, spikeActivePublish, modifySpikeActive } from '@/api/spike';
 
 const publicDateInit = {
         stock: '',
@@ -217,6 +289,8 @@ const publicDateInit = {
    mixins: [upload],
    data () {
      return {
+       dialogType: 'publish',
+       dialogTitle: '修改秒杀活动',
        query: {
         place: '0',
         type: '0',
@@ -240,6 +314,8 @@ const publicDateInit = {
          page: 0,
        },
        spikeDialog: false,
+       listDialog: false,
+       showDialog: {},
        updateDialog: {
           stock: '',
           seller: '',
@@ -271,7 +347,8 @@ const publicDateInit = {
         endTime: [
           {required: true, message: '请选择活动结束时间', trigger: 'change' }
         ],
-       }
+       },
+       editorDefault: ''
      }
    },
    components: {
@@ -289,9 +366,37 @@ const publicDateInit = {
           resolve()
         })
      },
-     handleEdit(index, item) {
-      //  this.updateDialog = item;
-      //  this.spikeDialog = true;
+     // 发布秒杀活动按钮，弹出弹窗
+     publicSpikeList() {
+        this.updateDialog  = publicDateInit;
+        this.editorDefault = '';
+        this.dialogTitle = '发布秒杀活动';
+        this.dialogType = 'publish';
+        this.spikeDialog = true;
+     },
+     // 查看秒杀活动
+     async handleEditList(index, item) {
+        let res = await querySpikeDetail({id: item.id});
+        if(res.data.code === 0) {
+          this.showDialog  = res.data.data;
+          this.listDialog = true;
+        }else {
+          this.$message.error('获取秒杀活动详情失败');
+        }
+     },
+     // 修改秒杀活动按钮,弹出弹窗
+     async handleEdit(index, item) {
+        let res = await querySpikeDetail({id: item.id});
+        if(res.data.code === 0) {
+          let data = res.data.data
+          this.updateDialog  = data;
+          this.editorDefault = data.goods;
+          this.dialogTitle = '修改秒杀活动';
+          this.dialogType = 'modeify';
+          this.spikeDialog = true;
+        }else {
+          this.$message.error('获取秒杀活动详情失败');
+        }
      },
      async handlePublic(formName) {
         this.updateDialog.goods = this.$refs.wangUeitors.getwangUditorHtml();
@@ -299,30 +404,74 @@ const publicDateInit = {
           this.$message.error('请填写商品介绍，用于显示活动详情');
           return;
         }
-        if(!this.uploadImgUrl){
+       if(this.dialogType === 'publish') {
+         //  发布秒杀活动
+          if(!this.uploadImgUrl){
+            this.$message.error('请上传活动简图');
+            return;
+          }else {
+            this.updateDialog.img = this.uploadImgUrl;
+          }
+          this.$refs[formName].validate( async (valid) => {
+            if (valid) {
+              let res = await spikeActivePublish(this.updateDialog)
+              if(res.data.code === 0) {
+                this.$message({
+                  message: res.data.msg,
+                  type: 'success'
+                });
+                await this.init()
+                this.spikeDialog = false;
+              }else {
+                this.$message.error(res.data.msg);
+              }
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          })
+       }else {
+         //  修改秒杀活动
+          // 修改装修案例  this.dialogType === 'modeify'
+        console.log(`图片上传：${this.uploadImgUrl}，默认图片： ${this.updateDialog.img}`)
+        this.updateDialog.img = this.uploadImgUrl ? this.uploadImgUrl : this.updateDialog.img;
+        if(!this.updateDialog.img) {
           this.$message.error('请上传活动简图');
           return;
-        }else {
-          this.updateDialog.img = this.uploadImgUrl;
         }
+
         this.$refs[formName].validate( async (valid) => {
           if (valid) {
-            let res = await spikeActivePublish(this.updateDialog)
+            let query = {
+              id: this.updateDialog.id,
+              stock: this.updateDialog.stock,
+              seller: this.updateDialog.seller,
+              goods: this.updateDialog.goods,
+              activity: this.updateDialog.activity,
+              price: this.updateDialog.price,
+              name: this.updateDialog.name,
+              startTime: this.updateDialog.startTime,
+              endTime: this.updateDialog.endTime,
+              img: this.updateDialog.img,
+              place: this.updateDialog.place,
+            }
+            let res = await modifySpikeActive(query)
             if(res.data.code === 0) {
               this.$message({
                 message: res.data.msg,
                 type: 'success'
               });
-              await this.init()
+              await this.init();
               this.spikeDialog = false;
             }else {
               this.$message.error(res.data.msg);
             }
-          } else {
+          }else {
             console.log('error submit!!');
             return false;
           }
         })
+       }
      },
      async handleQuery() {
        await this.init();
@@ -330,7 +479,7 @@ const publicDateInit = {
      dialogClose() {
       this.fileList = [];
       this.uploadImgUrl = '';
-      this.updateDialog = publicDateInit;
+      this.updateDialog = {...publicDateInit};
     },
     async handleCurrentPage() {
       this.query.page = this.pageInfo.page;
@@ -342,6 +491,25 @@ const publicDateInit = {
 
 <style lang='scss' scoped>
 .spike{
+  .item{
+    display: flex;
+    justify-content: center;
+  }
+  .dialog-input{
+    width: 35%;
+    margin-right: 50px;
+  }
+  .ueditor{
+    >h2{
+      text-align: center;
+    }
+    .wangUeitors{
+      width: 80%;
+      margin: 10px auto;
+    }
+  }
+}
+.case-list{
   padding: 30px 0;
 }
 .public-form{
@@ -362,6 +530,14 @@ const publicDateInit = {
       margin: 10px auto;
     }
   }
+  .show-content{
+    border: 1px solid #ccc;
+    width: 680px;
+    padding: 0 20px;
+    margin: 10px auto;
+    /deep/ img{
+      width: 100%;
+    }
+  }
 }
-
 </style>

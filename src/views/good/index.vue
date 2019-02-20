@@ -328,14 +328,21 @@ export default {
       this.listDialog = true;
     },
     async handleEdit(index, item) {
+      console.log(item)
       this.updateDialog  = item;
       this.editorDefault = item.detail;
       this.dialogTitle = '修改商品信息';
       this.dialogType = 'modeify';
       await this.handleGetQueryList();
       // 获取分类id
-      let selectedArr = this.updateDialog.tree.split('_');
-      this.updateDialog.typeSelectedOption = selectedArr.map(item => {
+      let selectedArr = [];
+      if(this.updateDialog.tree.indexOf('_') == -1 && this.updateDialog.tree === '0') {
+        selectedArr.push(this.updateDialog.tree);
+      }else {
+        selectedArr = this.updateDialog.tree.split('_');
+        selectedArr.push(item.genreId);
+      }
+      this.updateDialog.typeSelectedOption = selectedArr.map((item, index) => {
         return Number(item);
       });
       this.publicDialog = true;

@@ -10,6 +10,33 @@ export function categoryList(data) {
   })
 }
 
+// 添加商品分类
+export function publicCategory(data) {
+  return request({
+    url: '/publicCategory',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+// 删除商品分类
+export function deleteCategory(data) {
+  return request({
+    url: '/deleteCategory',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+// 修改商品分类名称
+export function modeifyCategory(data) {
+  return request({
+    url: '/modeifyCategory',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
 // 商品管理列表查询
 export function getGoods(data) {
   return request({

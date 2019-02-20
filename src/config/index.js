@@ -12,8 +12,8 @@ let routerMode = ''
 let baseImgPath = ''
 
 if (process.env.NODE_ENV == 'development') {
-    // baseUrl = 'http://127.0.0.1:5000/admin';
-    baseUrl = 'https://qingruiserver.wangshen.top/admin';
+    baseUrl = 'http://127.0.0.1:5000/admin';
+    // baseUrl = 'https://qingruiserver.wangshen.top/admin';
     baseImgPath = '';
 } else {
     baseUrl = 'https://qingruiserver.wangshen.top/admin';

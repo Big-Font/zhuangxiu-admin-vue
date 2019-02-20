@@ -1,14 +1,41 @@
 <template>
   <div class="case-list">
-    <!-- 查找和添加 -->
+    <!-- 查找和添加 title, author, recommend, style, company -->
     <div class="header-option">
-      <el-button type="danger" @click="publicCaseList">发布装修案例</el-button>
+      <div>
+        <div class="item">
+          <h4>案例标题</h4>
+          <el-input v-model="query.title" placeholder="按案例标题模糊查询"></el-input>
+        </div>
+        <div class="item">
+          <h4>作者</h4>
+          <el-input v-model="query.author" placeholder="按作者模糊查询"></el-input>
+        </div>
+        <div class="item">
+          <h4>装修风格</h4>
+          <el-input v-model="query.style" placeholder="按装修风格模糊查询"></el-input>
+        </div>
+        <div class="item">
+          <h4>装修公司</h4>
+          <el-input v-model="query.company" placeholder="按装修公司模糊查询"></el-input>
+        </div>
+      </div>
+      <div>
+        <div class="item">
+          <h4>推荐首页</h4>
+          <el-radio v-model="query.recommend" label="">全选</el-radio>
+          <el-radio v-model="query.recommend" label="1">推荐</el-radio>
+          <el-radio v-model="query.recommend" label="0">不推荐</el-radio>
+        </div>
+        <el-button type="primary" @click="handleQuery">查询</el-button>
+        <el-button type="danger" @click="publicCaseList">添加</el-button>
+      </div>
     </div>
     <!-- 表格 -->
     <el-table
       :data="formData"
       :border="true"
-      style="width: 80%; margin: 20px auto;">
+      style="width: 90%; margin: 20px auto;">
       <el-table-column
         label="id"
         align="center">
@@ -220,6 +247,13 @@ export default {
   mixins: [upload],
   data () {
     return {
+      query: {
+        title: '',
+        author: '',
+        recommend: '',
+        style: '',
+        company: ''
+      },
       dialogTitle: '发布装修案例',
       editorDefault: '',
       dialogType: 'publish',
@@ -287,9 +321,14 @@ export default {
     await this.init();
   },
   methods: {
+    // 模糊搜索
+    async handleQuery() {
+      await this.init();
+    },
     async init() {
       return new Promise( async (resolve, reject) => {
-        let res = await caseList({page: this.page});
+        let query = {...this.query, page: this.page};
+        let res = await caseList(query);
         this.formData = res.data.list;
         this.page = Number(res.data.page);
         this.total_page = Number(res.data.total_page);

@@ -1,5 +1,37 @@
 <template>
   <div class="worker">
+    <!-- 头部模糊搜索  type, isOver, phone -->
+    <div class="header-option">
+      <div>
+        <div class="item">
+          <h4>手机号</h4>
+          <el-input v-model="query.phone" placeholder="按手机号模糊查询"></el-input>
+        </div>
+        <div class="item">
+          <h4>类型</h4>
+          <el-select v-model="query.type" placeholder="按类型搜索">
+            <el-option
+              v-for="item in typeList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="item">
+          <h4>状态</h4>
+          <el-select v-model="query.isOver" placeholder="按状态搜索">
+            <el-option
+              v-for="item in isOverList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+        <el-button type="primary" @click="handleQuery">查询</el-button>
+      </div>
+    </div>
     <!-- 表格 -->
     <el-table
       :data="formData"
@@ -141,10 +173,22 @@ export default {
       formData: [],
       query: {
         page: 1,
-        type: 0,
-        isOver: 0,
+        type: '0',
+        isOver: '0',
         phone: ''
       },
+      //  *   @params  type   类型：1-安装，2-维修  0-全部
+    // *   @params  isOver 是否已经结束： 1-未结束，2-已结束  0-全部
+      typeList: [
+        {value: '0', label: '全部'},
+        {value: '1', label: '安装'},
+        {value: '2', label: '维修'}
+      ],
+      isOverList: [
+        {value: '0', label: '全部'},
+        {value: '1', label: '未结束'},
+        {value: '2', label: '已结束'}
+      ],
       detailDialog: false,
       updateDialog: {
 
@@ -155,11 +199,15 @@ export default {
     await this.init();
   },
   methods: {
+    // 头部模糊搜索
+    async handleQuery() {
+      await this.init();
+    },
     async init() {
       return new Promise( async (resolve, reject) => {
         let res = await getFindWorkerList(this.query);
         this.formData = res.data.list;
-        this.page = Number(res.data.page);
+        this.query.page = Number(res.data.page);
         this.total_page = Number(res.data.total_page);
         resolve();
       })
