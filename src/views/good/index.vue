@@ -145,6 +145,8 @@
           <el-form-item class="dialog-input" label="商品类别">
             <el-cascader
               :options="typeList"
+              placeholder="请选择商品分类"
+              @change="handleTypeSelectedChange"
               v-model="updateDialog.typeSelectedOption"
             ></el-cascader>
           </el-form-item>
@@ -240,7 +242,7 @@
 <script>
 import { upload, pagination } from '@/mixins';
 import WangEditor from '@/components/WangEditor';
-import { getGoods,goodsInfoUpdateList, categoryList } from '@/api/goods';
+import { getGoods, publicGood, modeifyGood, goodsInfoUpdateList, categoryList } from '@/api/goods';
 
 let initUpdateDialog = {
     brandId: '',
@@ -354,8 +356,15 @@ export default {
       this.updateDialog = initUpdateDialog;
     },
     // 发布商品
-    handlePublishGoods() {
+    async handlePublishGoods() {
+      this.updateDialog = {...initUpdateDialog};
+      this.editorDefault = '';
+      this.dialogTitle = '添加商品';
+      this.dialogType = 'publish';
+      await this.handleGetQueryList();
+      // 获取分类id
 
+      this.publicDialog = true;
     },
     // 查询商品
     async handleQuery() {
@@ -365,7 +374,96 @@ export default {
     },
     // 修改和发布商品信息
     handlePublic(formName) {
+      this.updateDialog.detail = this.$refs.wangUeitors.getwangUditorHtml();
+      if(!this.updateDialog.detail) {
+        this.$message.error('请填写文章内容，用于展示商品详情');
+        return;
+      }
+      if(this.dialogType === 'publish') {
+        // 确定发布商品
+        if(!this.uploadImgUrl){
+          this.$message.error('请上传活动简图');
+          return;
+        }else {
+          this.updateDialog.img = this.uploadImgUrl;
+        }
+        this.$refs[formName].validate( async (valid) => {
+          if (valid) {
+            // brandId, genreId, name, price, tag, introduce, img, sellerId, detail
+            let params = {
+              brandId: this.updateDialog.brandId,
+              genreId: this.updateDialog.genreId,
+              name: this.updateDialog.name,
+              price: this.updateDialog.price,
+              tag: this.updateDialog.tag,
+              introduce: this.updateDialog.introduce,
+              img: this.updateDialog.img,
+              sellerId: this.updateDialog.sellerId,
+              detail: this.updateDialog.detail
+            }
+            console.log(params)
+            let res = await publicGood(params)
+            if(res.data.code === 0) {
+              this.$message({
+                message: res.data.msg,
+                type: 'success'
+              });
+              await this.init();
+              this.publicDialog = false;
+            }else {
+              this.$message.error(res.data.msg);
+            }
+          }else {
+            console.log('error submit!!');
+            return false;
+          }
+        })
+      }else {
+        // 确定修改信息
+        console.log(`图片上传：${this.uploadImgUrl}，默认图片： ${this.updateDialog.img}`)
+        this.updateDialog.img = this.uploadImgUrl ? this.uploadImgUrl : this.updateDialog.img;
+        if(!this.updateDialog.img) {
+          this.$message.error('请上传活动简图');
+          return;
+        }
+        this.$refs[formName].validate( async (valid) => {
+          if (valid) {
+            let params = {
+              id: this.updateDialog.id,
+              brandId: this.updateDialog.brandId,
+              genreId: this.updateDialog.genreId,
+              name: this.updateDialog.name,
+              price: this.updateDialog.price,
+              tag: this.updateDialog.tag,
+              introduce: this.updateDialog.introduce,
+              img: this.updateDialog.img,
+              sellerId: this.updateDialog.sellerId,
+              detail: this.updateDialog.detail
+            }
+            console.log(params)
+            let res = await modeifyGood(params)
+            if(res.data.code === 0) {
+              this.$message({
+                message: res.data.msg,
+                type: 'success'
+              });
+              await this.init();
+              this.publicDialog = false;
+            }else {
+              this.$message.error(res.data.msg);
+            }
+          }else {
+            console.log('error submit!!');
+            return false;
+          }
+        })
+      }
 
+    },
+    // 多级选择器change事件
+    handleTypeSelectedChange(item) {
+      console.log(item[item.length-1]);
+      this.updateDialog.genreId = item[item.length-1];
     },
     // 根据typeId 递归层级id
     deepData() {

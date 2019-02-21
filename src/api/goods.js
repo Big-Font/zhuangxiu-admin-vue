@@ -46,6 +46,24 @@ export function getGoods(data) {
   })
 }
 
+// 添加产品
+export function publicGood(data) {
+  return request({
+    url: '/publicGood',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+// 修改商品属性
+export function modeifyGood(data) {
+  return request({
+    url: '/modeifyGood',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
 // 商品列表中品牌、商家、类别查询接口--用于商品信息修改和发布
 export function goodsInfoUpdateList(data) {
   return request({

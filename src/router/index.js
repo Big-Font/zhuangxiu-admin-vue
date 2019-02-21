@@ -155,12 +155,12 @@ export const constantRouterMap = [
         component: () => import('@/views/good'),
         meta: { title: '商品管理', icon: 'international' }
       },
-      {
-        path: 'shopCar',
-        name: 'shopCar',
-        component: () => import('@/views/shopCar'),
-        meta: { title: '购物车管理', icon: 'list' }
-      }
+      // {
+      //   path: 'shopCar',
+      //   name: 'shopCar',
+      //   component: () => import('@/views/shopCar'),
+      //   meta: { title: '购物车管理', icon: 'list' }
+      // }
     ]
   },
 
