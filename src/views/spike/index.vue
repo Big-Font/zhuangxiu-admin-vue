@@ -83,9 +83,9 @@
         label="活动状态"
         align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.type == 1">未开始</el-tag>
-          <el-tag type="success" v-if="scope.row.type == 2">进行中</el-tag>
-          <el-tag type="info" v-if="scope.row.type == 3">已结束</el-tag>
+          <el-tag type="success" v-if="scope.row.type == 1">进行中</el-tag>
+          <el-tag type="info" v-if="scope.row.type == 2">已结束</el-tag>
+          <el-tag v-if="scope.row.type == 3">未开始</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="150">
@@ -187,7 +187,10 @@
         </div>
         <div class="ueditor">
           <h2>商品介绍</h2>
-          <wang-editor v-if="spikeDialog" class="wangUeitors" ref="wangUeitors" :editorDefault="editorDefault"></wang-editor>
+          <wang-editor v-if="spikeDialog" class="wangUeitors"
+          ref="wangUeitors"
+          :nameid="nameid"
+          :editorDefault="editorDefault"></wang-editor>
         </div>
       </el-form>
 
@@ -267,7 +270,7 @@
 </template>
 
 <script>
-import { upload } from '@/mixins';
+import { upload, wangEditorNameid } from '@/mixins';
 import WangEditor from '@/components/WangEditor';
 import { spikeActiveList, querySpikeDetail, spikeActivePublish, modifySpikeActive } from '@/api/spike';
 
@@ -286,7 +289,7 @@ const publicDateInit = {
 
  export default {
    name: 'spikeList',
-   mixins: [upload],
+   mixins: [upload, wangEditorNameid],
    data () {
      return {
        dialogType: 'publish',
@@ -304,9 +307,9 @@ const publicDateInit = {
        ],
        typeOptions: [
          { value: '0', label: '全部' },
-         { value: '1', label: '未开始' },
-         { value: '2', label: '进行中' },
-         { value: '3', label: '已结束' },
+         { value: '1', label: '进行中' },
+         { value: '2', label: '已结束' },
+         { value: '3', label: '未开始' },
        ],
        bannerData: [],
        pageInfo: {

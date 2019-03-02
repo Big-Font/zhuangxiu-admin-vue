@@ -159,7 +159,10 @@
         </div>
         <div class="ueditor">
           <h2>文章内容</h2>
-          <wang-editor v-if="publicDialog" class="wangUeitors" :editorDefault="editorDefault" ref="wangUeitors"></wang-editor>
+          <wang-editor v-if="publicDialog" class="wangUeitors"
+          :editorDefault="editorDefault"
+          :nameid="nameid"
+          ref="wangUeitors"></wang-editor>
         </div>
       </el-form>
 
@@ -225,7 +228,7 @@
 </template>
 
 <script>
-import { upload } from '@/mixins';
+import { upload, wangEditorNameid } from '@/mixins';
 import WangEditor from '@/components/WangEditor';
 import { caseList, fitupCasePublic, fitupcaseModify } from '@/api/caseList';
 
@@ -244,7 +247,7 @@ const publicDateInit = {
 
 export default {
   name: 'caseList',
-  mixins: [upload],
+  mixins: [upload, wangEditorNameid],
   data () {
     return {
       query: {

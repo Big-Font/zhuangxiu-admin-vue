@@ -154,7 +154,7 @@ import { getBannerList, bannerModify } from '@/api/banner';
     },
   },
    async mounted() {
-     this.actionBaseUrl = `${baseUrl}/upload`;
+     this.actionBaseUrl = `${baseUrl}/upload/banner`;
      this.bannerData = await this.init();
    },
    methods: {

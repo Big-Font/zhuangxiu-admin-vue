@@ -20,7 +20,8 @@ export const upload = {
     },
   },
   mounted() {
-    this.actionBaseUrl = `${baseUrl}/upload`;
+    this.actionBaseUrl = `${baseUrl}/upload/${this.$options.name?this.$options.name: 'default'}`;
+    console.log(this.$options.name)
   },
   methods: {
     fileUpload(response, file, fileList) {
@@ -44,5 +45,16 @@ export const pagination = {
     async handleCurrentPage() {
       await this.init();
     },
+  }
+}
+
+export const wangEditorNameid = {
+  data() {
+    return {
+      nameid: ''
+    }
+  },
+  mounted() {
+    this.nameid = this.$options.name ? this.$options.name : 'default';
   }
 }

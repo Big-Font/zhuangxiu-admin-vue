@@ -15,6 +15,10 @@ export default({
       editorDefault: {
         type: String,
         default: ''
+      },
+      nameid: {
+        type: String,
+        default: 'default'
       }
     },
     data(){
@@ -34,7 +38,7 @@ export default({
 　　　　　　　　　　　　uploadFileName : 'myFileName' , //设置上传图片文件的时候，后台接受的文件名，files.myFileName;
 　　　　　　　　　　　　withCredentials : true , //跨域上传中如果需要传递 cookie 需设置 withCredentials
 　　　　　　　　　　　　uploadImgTimeout : 10000 , //自定义 timeout 时间，这里是设置的3秒
-　　　　　　　　　　　　uploadImgServer : `${baseUrl}/wangeditor/upload`, //上传到后台的接口
+　　　　　　　　　　　　uploadImgServer : `${baseUrl}/wangeditor/upload/${_this.nameid}`, //上传到后台的接口
 　　　　　　　　};
         　　　　　　　/*editor.customConfig.uploadImgParams = {//如果要自定义传一些参数，就在这里；
             　　　　　　　　// 如果版本 <=v3.1.0 ，属性值会自动进行 encode ，此处无需 encode

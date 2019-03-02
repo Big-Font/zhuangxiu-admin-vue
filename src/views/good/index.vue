@@ -181,7 +181,10 @@
         </div>
         <div class="ueditor">
           <h2>商品详情</h2>
-          <wang-editor v-if="publicDialog" class="wangUeitors" :editorDefault="editorDefault" ref="wangUeitors"></wang-editor>
+          <wang-editor v-if="publicDialog" class="wangUeitors"
+          :editorDefault="editorDefault"
+          :nameid="nameid"
+          ref="wangUeitors"></wang-editor>
         </div>
       </el-form>
 
@@ -240,7 +243,7 @@
 </template>
 
 <script>
-import { upload, pagination } from '@/mixins';
+import { upload, pagination, wangEditorNameid } from '@/mixins';
 import WangEditor from '@/components/WangEditor';
 import { getGoods, publicGood, modeifyGood, goodsInfoUpdateList, categoryList } from '@/api/goods';
 
@@ -262,7 +265,7 @@ let initUpdateDialog = {
 
 export default {
   name: 'goods',
-  mixins: [upload, pagination],
+  mixins: [upload, pagination, wangEditorNameid],
   data () {
     return {
       query: {
