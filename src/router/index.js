@@ -129,6 +129,7 @@ export const constantRouterMap = [
     path: '/goods',
     component: Layout,
     name: 'goods',
+    redirect: '/goods/category',
     meta: { title: '商品管理', icon: 'clipboard' },
     children: [
       {
@@ -161,6 +162,28 @@ export const constantRouterMap = [
       //   component: () => import('@/views/shopCar'),
       //   meta: { title: '购物车管理', icon: 'list' }
       // }
+    ]
+  },
+
+  {
+    path: '/wechat',
+    component: Layout,
+    name: 'wechat',
+    redirect: '/wechat/reply',
+    meta: { title: '微信功能管理', icon: 'clipboard' },
+    children: [
+      {
+        path: 'reply',
+        name: 'reply',
+        component: () => import('@/views/reply'),
+        meta: { title: '回复策略', icon: 'people' }
+      },
+      {
+        path: 'server',
+        name: 'server',
+        component: () => import('@/views/wechatServer'),
+        meta: { title: '客服管理', icon: 'people' }
+      },
     ]
   },
 
