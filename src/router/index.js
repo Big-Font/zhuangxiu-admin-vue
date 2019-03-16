@@ -179,6 +179,13 @@ export const constantRouterMap = [
         meta: { title: '回复策略', icon: 'people' }
       },
       {
+        path: 'addReply',
+        name: 'addReply',
+        hidden: true,
+        component: () => import('@/views/reply/addReply'),
+        meta: { title: '添加回复策略', hidden: false}
+      },
+      {
         path: 'server',
         name: 'server',
         component: () => import('@/views/wechatServer'),
