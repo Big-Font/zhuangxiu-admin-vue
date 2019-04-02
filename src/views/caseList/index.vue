@@ -77,8 +77,8 @@
         label="是否推荐"
         align="center">
         <template slot-scope="scope">
-          <div v-if="scope.row.recommend == 0">不推荐</div>
-          <div v-if="scope.row.recommend == 1">推荐</div>
+          <div v-if="scope.row.recommend == 0">非首页显示</div>
+          <div v-if="scope.row.recommend == 1">首页显示</div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="150">
@@ -135,8 +135,8 @@
             <el-input v-model="updateDialog.company" placeholder="请输入案例的装修公司"></el-input>
           </el-form-item>
           <el-form-item class="dialog-input" label="推荐首页" prop="recommend" >
-            <el-radio v-model="updateDialog.recommend" label="0">推荐</el-radio>
-            <el-radio v-model="updateDialog.recommend" label="1">不推荐</el-radio>
+            <el-radio v-model="updateDialog.recommend" label="1">首页显示</el-radio>
+            <el-radio v-model="updateDialog.recommend" label="0">非首页显示</el-radio>
           </el-form-item>
         </div>
         <div class="item">
@@ -203,8 +203,8 @@
             <div>{{showDialog.company}}</div>
           </el-form-item>
           <el-form-item class="dialog-input" label="推荐首页" prop="recommend" >
-            <el-radio v-model="showDialog.recommend" label="0">推荐</el-radio>
-            <el-radio v-model="showDialog.recommend" label="1">不推荐</el-radio>
+            <el-radio v-model="showDialog.recommend" label="1">首页</el-radio>
+            <el-radio v-model="showDialog.recommend" label="0">非首页显示</el-radio>
           </el-form-item>
         </div>
         <div class="item">

@@ -153,6 +153,18 @@
           </el-form-item>
         </div>
       </el-form>
+      <el-form class="public-form" label-position="left" label-width="100px" :model="updateDialog">
+        <div class="item" >
+          <el-form-item class="dialog-input" label="照片">
+            <div v-if="Array.isArray(updateDialog.imgs)" style="width: 100%;" class="clearfix">
+              <img class="fl" style="width:150px; height: 100px;" v-for="(item, index) in updateDialog.imgs" :key="index" :src="item" alt="" >
+            </div>
+            <div v-else>
+              <img class="fl" style="width:150px; height: 100px;" :src="updateDialog.imgs" alt="" >
+            </div>
+          </el-form-item>
+        </div>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <!-- <el-button @click="publicDialog = false">取 消</el-button> -->
         <el-button type="primary" @click="detailDialog = false">确 定</el-button>
