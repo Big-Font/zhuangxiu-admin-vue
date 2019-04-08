@@ -4,8 +4,12 @@
     <div class="header-option">
       <div>
         <div class="item">
-          <h4>手机号</h4>
-          <el-input v-model="query.phone" placeholder="按手机号模糊查询"></el-input>
+          <h4>注册手机</h4>
+          <el-input v-model="query.userPhone" placeholder="按注册手机号模糊查询"></el-input>
+        </div>
+        <div class="item">
+          <h4>填写手机</h4>
+          <el-input v-model="query.phone" placeholder="按填写手机号模糊查询"></el-input>
         </div>
         <div class="item">
           <h4>类型</h4>
@@ -18,11 +22,26 @@
             </el-option>
           </el-select>
         </div>
+
+      </div>
+      <div>
         <div class="item">
-          <h4>状态</h4>
+          <h4>状态搜索</h4>
           <el-select v-model="query.isOver" placeholder="按状态搜索">
             <el-option
               v-for="item in isOverList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+        <!-- 是否催单 -->
+        <div class="item">
+          <h4>是否催单</h4>
+          <el-select v-model="query.ishurry" placeholder="按状态搜索">
+            <el-option
+              v-for="item in ishurryList"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -59,7 +78,14 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="用户手机号"
+        label="注册手机号"
+        align="center">
+        <template slot-scope="scope">
+          <div>{{ scope.row.userPhone }} </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="填写的手机号"
         align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.phone }} </div>
@@ -78,6 +104,14 @@
         <template slot-scope="scope">
           <div v-if="scope.row.type == 1">安装</div>
           <div v-if="scope.row.type == 2">维修</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="催单"
+        align="center">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.ishurry == -1">催单</el-tag>
+          <el-tag type="info" v-if="scope.row.ishurry == 0">正常</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -128,7 +162,7 @@
             <div>{{updateDialog.address}}</div>
           </el-form-item>
           <el-form-item class="dialog-input" label="手机号">
-            <div>{{updateDialog.phone}}</div>
+            <div>{{updateDialog.userPhone}}&nbsp;&nbsp;或&nbsp;&nbsp;{{updateDialog.phone}}</div>
           </el-form-item>
         </div>
       </el-form>
@@ -153,14 +187,18 @@
           </el-form-item>
         </div>
       </el-form>
-      <el-form class="public-form" label-position="left" label-width="100px" :model="updateDialog">
+      <el-form class="public-form-oneline" label-position="left" label-width="100px" :model="updateDialog">
         <div class="item" >
           <el-form-item class="dialog-input" label="照片">
             <div v-if="Array.isArray(updateDialog.imgs)" style="width: 100%;" class="clearfix">
-              <img class="fl" style="width:150px; height: 100px;" v-for="(item, index) in updateDialog.imgs" :key="index" :src="item" alt="" >
+              <viewer :images="updateDialog.imgs">
+                <img class="fl" style="width:150px; height: 100px;" v-for="(item, index) in updateDialog.imgs" :key="index" :src="item" alt="" >
+              </viewer>
             </div>
             <div v-else>
-              <img class="fl" style="width:150px; height: 100px;" :src="updateDialog.imgs" alt="" >
+              <viewer :images="updateDialog.imgs">
+                <img class="fl" style="width:150px; height: 100px;" :src="updateDialog.imgs" alt="" >
+              </viewer>
             </div>
           </el-form-item>
         </div>
@@ -187,7 +225,9 @@ export default {
         page: 1,
         type: '0',
         isOver: '0',
-        phone: ''
+        ishurry: '99',
+        phone: '',
+        userPhone: ''
       },
       //  *   @params  type   类型：1-安装，2-维修  0-全部
     // *   @params  isOver 是否已经结束： 1-未结束，2-已结束  0-全部
@@ -200,6 +240,11 @@ export default {
         {value: '0', label: '全部'},
         {value: '1', label: '未结束'},
         {value: '2', label: '已结束'}
+      ],
+      ishurryList: [
+        {value: '99', label: '全部'},
+        {value: '0', label: '正常'},
+        {value: '-1', label: '催单'}
       ],
       detailDialog: false,
       updateDialog: {
@@ -290,6 +335,15 @@ export default {
       width: 80%;
       margin: 10px auto;
     }
+  }
+}
+.public-form-oneline{
+  .item{
+    display: flex;
+    justify-content: center;
+  }
+  .dialog-input{
+    width: 85%;
   }
 }
 </style>

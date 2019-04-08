@@ -11,11 +11,18 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import router from './router'
 import store from './store'
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
 
 import '@/icons' // icon
 import '@/permission' // permission control
 
 Vue.use(ElementUI, { locale })
+Vue.use(Viewer, {
+  defaultOptions: {
+      zIndex: 2010
+  }
+})
 
 Vue.config.productionTip = false
 
