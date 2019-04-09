@@ -17,3 +17,12 @@ export function bannerModify(data) {
     data: qs.stringify(data)
   })
 }
+
+//  发布banner接口 bannerPublic
+export function bannerPublic(data) {
+  return request({
+    url: '/bannerPublic',
+    method: 'post',
+    data
+  })
+}

@@ -34,7 +34,7 @@
    <el-table
       :data="bannerData"
       :border="true"
-      style="width: 90%; margin: 20px auto;">
+      style="width: 93%; margin: 20px auto;">
       <el-table-column
         label="id"
         align="center">

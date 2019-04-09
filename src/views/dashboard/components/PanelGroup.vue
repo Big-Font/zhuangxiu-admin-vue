@@ -61,7 +61,7 @@ export default {
     CountTo
   },
   mounted() {
-    this.totalDate = Number(this.dateDiff('2008-06-08'))
+    this.totalDate = Number(this.dateDiff('2019-04-08'))
   },
   methods: {
     handleSetLineChartData(type) {

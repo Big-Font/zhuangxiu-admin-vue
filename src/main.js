@@ -20,7 +20,7 @@ import '@/permission' // permission control
 Vue.use(ElementUI, { locale })
 Vue.use(Viewer, {
   defaultOptions: {
-      zIndex: 2010
+      zIndex: 2500
   }
 })
 

@@ -23,7 +23,7 @@ export default {
 .dashboard-editor-container {
   padding: 32px;
   background-color: rgb(240, 242, 245);
-  min-height: 100%;
+  height: calc(100vh - 84px);
   .chart-wrapper {
     background: #fff;
     padding: 16px 16px 0;
